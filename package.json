@@ -1,0 +1,21 @@
+{
+  "name": "assingment3.2_roi_michal",
+  "version": "1.0.0",
+  "description": "308097237_312461080",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SISE-Web-Development-Environments/Assingment3.2_Roi_Michal.git"
+  },
+  "author": "ROI & MICHAL",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SISE-Web-Development-Environments/Assingment3.2_Roi_Michal/issues"
+  },
+  "homepage": "https://github.com/SISE-Web-Development-Environments/Assingment3.2_Roi_Michal#readme"
+}

@@ -1,6 +1,6 @@
-// fuction searchForRecipes(){
-
-// }
+function searchForRecipes(searchQuery, num, search_params){
+    
+}
 
 function extrasSearchResultIds(search_response){
     let recipes = search_respose.data.results;
@@ -13,5 +13,5 @@ function extrasSearchResultIds(search_response){
     return recipes_id_list;
 }
 
-// exports.searchForRecipes = searchForRecipes;
+exports.searchForRecipes = searchForRecipes;
 exports.extrasSearchResultIds = extrasSearchResultIds;

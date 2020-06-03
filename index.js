@@ -25,7 +25,27 @@ app.use(
         cookieName: "session", //the cookie key name
         secret: "sesami1357sec",
         duration:20 * 1000,
-        
+        activeDuration: 0, //if expireIn < activeDuration,
+        //the session will be extended by activeDuration milliseconds
     })
-)
+      
+);
+app.get("/alive", (req, res) => {
+    res.send("I'm alive");
+});
+
+//Rounting
+app.use("/users", users);
+app.use("/recipes", recipes);
+app.use(auth);
+
+//Defult router
+app.use((req, res) => {
+    res.send(404);
+});
+
+app.listen(port, () => {
+    console.log('Exmple app listening on port ${port}!');
+});
+
 

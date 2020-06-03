@@ -21,5 +21,5 @@ router.get("/user/recipeInfo/{ids}", (req, res) => {
     getUserInfoOnRecipes(user_name, ids); 
 });
 
-modules.exports = router;
+exports.router = router;
 

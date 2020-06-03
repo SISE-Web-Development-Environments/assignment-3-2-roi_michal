@@ -7,7 +7,7 @@ const session = require("client-sessions");
 // ---route importing
 const auth = require("./routes/auth")
 const users = require("./routes/users")
-const recipes = recipes("./route/recipes")
+const recipes = require("./routes/recipes")
 
 //---App settings and config
 const app = express();
@@ -35,9 +35,9 @@ app.get("/alive", (req, res) => {
 });
 
 //Rounting
-app.use("/users", users);
-app.use("/recipes", recipes);
-app.use(auth);
+//app.use("/users", users);
+//app.use("/recipes", recipes);
+//app.use(auth);
 
 //Defult router
 app.use((req, res) => {

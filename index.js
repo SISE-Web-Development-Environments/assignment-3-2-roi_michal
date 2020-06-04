@@ -50,6 +50,10 @@ app.use((req, res) => {
     res.send(404);
 });
 
+app.use(function (err, req, res, next) {    
+    res.status(err.status || 500).send({ message: err.message, success: false });
+});
+
 app.listen(port, () => {
     console.log('Exmple app listening on port ${port}!');
 });

@@ -1,5 +1,5 @@
-const express = require("express");
-const router = express.Router();
+var express = require("express");
+var router = express.Router();
 const search_util = require("./utils/SEARCHutils");
 const axios = require("axios");
 const api_domain = "https://api.spoonacular.com/recipes";
@@ -72,3 +72,5 @@ function getRecipeInfo(id) {
         }
     });
 }
+
+module.exports = router;

@@ -5,13 +5,8 @@ const morgan = require("morgan");
 const path = require("path");
 const bodyParser = require("body-parser");
 const session = require("client-sessions");
-const DButils = require("../modules/DButils");
+//const DButils = require("./routes/utils/DButils");
 
-
-// ---route importing
-const auth = require("./routes/auth")
-const users = require("./routes/users")
-const recipes = require("./routes/recipes")
 
 //---App settings and config
 const app = express();
@@ -34,14 +29,21 @@ app.use(
     })
       
 );
+
+// ---route importing
+const auth = require("./routes/auth");
+const users = require("./routes/users");
+const recipes = require("./routes/recipes");
+
+//Rounting
+app.use("/auth" , auth);
+app.use("/users", users);
+app.use("/recipes", recipes);
+
+
 app.get("/alive", (req, res) => {
     res.send("I'm alive");
 });
-
-//Rounting
-app.use("/users", users);
-app.use("/recipes", recipes);
-app.use("/auth" , auth);
 
 //Defult router
 app.use((req, res) => {

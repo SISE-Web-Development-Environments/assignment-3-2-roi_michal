@@ -1,4 +1,8 @@
 SELECT TOP (1000) [user_id]
       ,[username]
       ,[password]
+      ,[first_name]
+      ,[last_name]
+      ,[country]
+      ,[email]
   FROM [dbo].[users]

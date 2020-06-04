@@ -10,9 +10,9 @@ router.post("/Register", async (req, res, next) => {
     // username exists
     const users = await DButils.selectUsernames();
 
-    if (users.find((x) => x.username === req.body.username))
+    if (users.find((x) => x.username === req.body.username)) {
       throw { status: 409, message: "Username taken" };
-
+    }
     // make new password
     let hash_password = bcrypt.hashSync(req.body.password, parseInt(process.env.bcrypt_saltRounds));
     await DButils.insertUserToUser(req.body.username, hash_password, req.body.first_name, req.body.last_name, req.body.country, req.body.email);
@@ -26,12 +26,11 @@ router.post("/Register", async (req, res, next) => {
 router.post("/Login", async (req, res, next) => {
   try {
     // check that username exists
-   // const users = await DButils.execQuery("SELECT username FROM users");
+    // const users = await DButils.execQuery("SELECT username FROM users");
     const users = await DButils.selectUsernames();
-    if (!users.find((x) => x.username === req.body.username)){
-      throw { status: 401, message: `No Username: '${req.body.username}' in the system`};
+    if (!users.find((x) => x.username === req.body.username)) {
+      throw { status: 401, message: `No Username: '${req.body.username}' in the system` };
     }
-
     // check that the password is correct
     const user = (
       //await DButils.execQuery(`SELECT * FROM users WHERE username = '${req.body.username}'` )
@@ -44,9 +43,6 @@ router.post("/Login", async (req, res, next) => {
 
     // Set cookie
     req.session.user_id = user.user_id;
-    // req.session.save();
-    // res.cookie(session_options.cookieName, user.user_id, cookies_options);  
-    // return cookie
     res.status(200).send({ message: "login succeeded", success: true });
   } catch (error) {
     next(error);

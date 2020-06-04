@@ -39,13 +39,18 @@ execQuery = async function (query) {
 // ************* QUERIES ************* //
 
 selectUsernames = async function(){
-    var users = await execQuery("SELECT username FROM users");
+    const users = await execQuery("SELECT username FROM users");
     return users;
 };
 
 selectUserWithUsername = async function(username){
-    var user = await execQuery(`SELECT * FROM users WHERE username = '${username}'`);
+    const user = await execQuery(`SELECT * FROM users WHERE username = '${username}'`);
     return user;
+};
+
+selectUsersIDs = async function(){
+    const usersIDs = await execQuery("SELECT user_id FROM users");
+    return usersIDs;
 };
 
 insertUserToUser = async function(username, hash_password, first_name, last_name, country, email){
@@ -61,11 +66,29 @@ insertUserToUser = async function(username, hash_password, first_name, last_name
       );    
 };
 
+addFavoriteRecipe = async function (user_id, reccipe_id) {
+    await execQuery(
+        `INSERT INTO favorite_recipes VALUES (          
+          '${user_id}',
+          '${reccipe_id}')`          
+    );
+};
+
+getFavoriteRecipes = async function (user_id) {
+    const recipes_ids = await execQuery(
+        `SELECT recipe_id FROM favorite_recipes WHERE user_id = '${user_id}'`        
+    );
+    return recipes_ids;
+};
+
 // ************* EXPORTS ************* //
 
 module.exports ={
     execQuery: execQuery,
     selectUsernames: selectUsernames,
+    selectUsersIDs: selectUsersIDs,
     selectUserWithUsername: selectUserWithUsername,
-    insertUserToUser: insertUserToUser
+    insertUserToUser: insertUserToUser,
+    addFavoriteRecipe: addFavoriteRecipe,
+    getFavoriteRecipes: getFavoriteRecipes
 }

@@ -1,5 +1,4 @@
-function searchForRecipes(searchQuery, num, search_params){
-    
+function searchForRecipes(searchQuery, num, search_params){    
 }
 
 function extrasSearchResultIds(search_response){

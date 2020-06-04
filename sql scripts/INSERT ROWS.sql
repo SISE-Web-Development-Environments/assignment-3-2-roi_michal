@@ -1,8 +1,8 @@
 INSERT INTO dbo.users
 (
-    [username], [password]
+    [username], [password], [first_name], [last_name], [country], [email]
 )
 VALUES(
-    'aa', HASHBYTES('SHA2_256','aaa')
+    'kroi', HASHBYTES('SHA2_256','aaa'), 'Roi', 'Katz', 'Israel', 'roikatz@gmail.com'
 )
 GO

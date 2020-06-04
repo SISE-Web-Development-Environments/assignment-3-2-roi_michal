@@ -1,8 +1,12 @@
 //---libraries importing
+require("dotenv").config();
 const express = require("express");
 const morgan = require("morgan"); 
+const path = require("path");
 const bodyParser = require("body-parser");
 const session = require("client-sessions");
+const DButils = require("../modules/DButils");
+
 
 // ---route importing
 const auth = require("./routes/auth")
@@ -35,9 +39,9 @@ app.get("/alive", (req, res) => {
 });
 
 //Rounting
-//app.use("/users", users);
-//app.use("/recipes", recipes);
-//app.use(auth);
+app.use("/users", users);
+app.use("/recipes", recipes);
+app.use("/auth" , auth);
 
 //Defult router
 app.use((req, res) => {

@@ -8,23 +8,14 @@ router.post("/Register", async (req, res, next) => {
     // parameters exists
     // valid parameters
     // username exists
-    const users = await DButils.execQuery("SELECT username FROM users");
+    const users = await DButils.selectUsernames();
 
     if (users.find((x) => x.username === req.body.username))
       throw { status: 409, message: "Username taken" };
 
     // make new password
     let hash_password = bcrypt.hashSync(req.body.password, parseInt(process.env.bcrypt_saltRounds));
-    await DButils.execQuery(
-      `INSERT INTO users VALUES (
-          default,
-          '${req.body.username}',
-          '${hash_password}',
-          '${req.body.first_name}',
-          '${req.body.last_name}',
-          '${req.body.country}',
-          '${req.body.email}')`
-    );
+    await DButils.insertUserToUser(req.body.username, hash_password, req.body.first_name, req.body.last_name, req.body.country, req.body.email);
 
     res.status(201).send({ message: "user created", success: true });
   } catch (error) {
@@ -35,15 +26,16 @@ router.post("/Register", async (req, res, next) => {
 router.post("/Login", async (req, res, next) => {
   try {
     // check that username exists
-    const users = await DButils.execQuery("SELECT username FROM users");
-    if (!users.find((x) => x.username === req.body.username))
-      throw { status: 401, message: "Username or Password incorrect" };
+   // const users = await DButils.execQuery("SELECT username FROM users");
+    const users = await DButils.selectUsernames();
+    if (!users.find((x) => x.username === req.body.username)){
+      throw { status: 401, message: `No Username: '${req.body.username}' in the system`};
+    }
 
     // check that the password is correct
     const user = (
-      await DButils.execQuery(
-        `SELECT * FROM users WHERE username = '${req.body.username}'`
-      )
+      //await DButils.execQuery(`SELECT * FROM users WHERE username = '${req.body.username}'` )
+      await DButils.selectUserWithUsername(req.body.username)
     )[0];
 
     if (!bcrypt.compareSync(req.body.password, user.password)) {

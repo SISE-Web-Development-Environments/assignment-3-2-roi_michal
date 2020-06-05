@@ -4,31 +4,31 @@ const DButils = require("./utils/DButils");
 const bcrypt = require("bcrypt");
 
 router.use((req, res, next) => {
-    if (req.user_id) {
-        next();
-    }
-    else {
-        throw { status: 401, message: "unauthorized2" }
-    }
+  if (req.user_id) {
+    next();
+  }
+  else {
+    throw { status: 401, message: "unauthorized2" }
+  }
 });
 
 router.post("/addFavoriteRecipe", async (req, res, next) => {
-    try {
-        await DButils.addFavoriteRecipe(req.user_id, '1234'); //todo: change hard code      
-        res.send({ sucess: true, message: "recipe added" });
-      } catch (error) {
-        next(error);
-      }
+  try {
+    await DButils.addFavoriteRecipe(req.user_id, '1234'); //todo: change hard code      
+    res.send({ sucess: true, message: "recipe added" });
+  } catch (error) {
+    next(error);
+  }
 });
 
 //get my favorite recepies
-router.get("/getFavoriteRecipes", (req, res, next) => {
-    try {
-        const recipes_ids = await DButils.getFavoriteRecipes(req.user_id);
-        res.send(recipes_ids);        
-      } catch (error) {
-        next(error);
-      }
+router.get("/getFavoriteRecipes", async (req, res, next) => {
+  try {
+    const recipes_ids = await DButils.getFavoriteRecipes(req.user_id);
+    res.send(recipes_ids);
+  } catch (error) {
+    next(error);
+  }
 });
 
 module.exports = router;

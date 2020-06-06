@@ -32,10 +32,7 @@ router.post("/Login", async (req, res, next) => {
       throw { status: 401, message: `No Username: '${req.body.username}' in the system` };
     }
     // check that the password is correct
-    const user = (
-      //await DButils.execQuery(`SELECT * FROM users WHERE username = '${req.body.username}'` )
-      await DButils.selectUserWithUsername(req.body.username)
-    )[0];
+    const user = (await DButils.selectUserWithUsername(req.body.username))[0];
 
     if (!bcrypt.compareSync(req.body.password, user.password)) {
       throw { status: 401, message: "Username or Password incorrect" };

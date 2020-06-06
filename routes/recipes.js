@@ -76,15 +76,15 @@ router.get("/searchByTags", async (req, res, next) => {
         });
         let recipes = await Promise.all(
             search_response.data.results.map((recipe_raw) =>
-            getRecipeInfo(recipe_raw.id)
+                getRecipeInfo(recipe_raw.id)
             )
         );
-    //  recipes = recipes.map((recipe) => recipe.data);
-    recipes = extractRelevantRecipeData(recipes);
-    res.send({ data: recipes });
-} catch (error) {
-    next(error);
-}
+        //  recipes = recipes.map((recipe) => recipe.data);
+        recipes = extractRelevantRecipeData(recipes);
+        res.send({ data: recipes });
+    } catch (error) {
+        next(error);
+    }
 });
 
 router.get("/searchByName", async (req, res, next) => {
@@ -100,11 +100,37 @@ router.get("/searchByName", async (req, res, next) => {
         });
         let recipes = await Promise.all(
             search_response.data.results.map((recipe_raw) =>
-            getRecipeInfo(recipe_raw.id)
+                getRecipeInfo(recipe_raw.id)
             )
         );
         //  recipes = recipes.map((recipe) => recipe.data);
-       recipes = extractRelevantRecipeData(recipes);
+        recipes = extractRelevantRecipeData(recipes);
+        res.send({ data: recipes });
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.get("/getThreeRandomRecipes", async (req, res, next) => {
+    try {
+        let recpies_with_intructios = [];
+        while (recpies_with_intructios.length < 3) {
+            const search_response = await axios.get(`${api_domain}/random`, {
+                params: {
+                    number: 10,
+                    apiKey: process.env.spooncular_apiKey
+                }
+            });
+            recpies_with_intructios = validRecipes(search_response);
+        }
+        //* extract data */
+        let recipes = await Promise.all(
+            recpies_with_intructios.data.recipes.map((recipe) =>
+                getRecipeInfo(recipe.id)
+            )
+        );
+        //  recipes = recipes.map((recipe) => recipe.data);
+        recipes = extractRelevantRecipeData(recipes);
         res.send({ data: recipes });
     } catch (error) {
         next(error);
@@ -120,41 +146,41 @@ function getRecipeInfo(id) {
     });
 }
 
-async function getRecipesRelevantInfo(recipes_id_list){
+async function getRecipesRelevantInfo(recipes_id_list) {
     let promises = [];
     //for each id -> get promise of GET response
     recipes_id_list.map((id) =>
-    promises.push(axios.get(`${api_domain}/${id}/information`, {
-        params: {
-            includeNutrition: false,
-            apiKey: process.env.spooncular_apiKey
-        }
-    }))
+        promises.push(axios.get(`${api_domain}/${id}/information`, {
+            params: {
+                includeNutrition: false,
+                apiKey: process.env.spooncular_apiKey
+            }
+        }))
     );
     let info_response1 = await Promise.all(promises);
     relevantRecipesData = extractRelevantRecipeData(info_response1);
     return relevantRecipesData;
 }
 
-async function getRecipesFullInfo(recipes_id_list){
+async function getRecipesFullInfo(recipes_id_list) {
     let promises = [];
     //for each id -> get promise of GET response
     recipes_id_list.map((id) =>
-    promises.push(axios.get(`${api_domain}/${id}/information`, {
-        params: {
-            includeNutrition: false,
-            apiKey: process.env.spooncular_apiKey
-        }
-    }))
+        promises.push(axios.get(`${api_domain}/${id}/information`, {
+            params: {
+                includeNutrition: false,
+                apiKey: process.env.spooncular_apiKey
+            }
+        }))
     );
     let info_response1 = await Promise.all(promises);
     relevantRecipesData = extractFullRecipeData(info_response1);
     return relevantRecipesData;
 }
 
-function extractRelevantRecipeData(recipes_info){
+function extractRelevantRecipeData(recipes_info) {
     return recipes_info.map((recipe_info) => {
-        const{
+        const {
             id,
             title,
             readyInMinutes,
@@ -175,11 +201,11 @@ function extractRelevantRecipeData(recipes_info){
         };
     });
 }
-    
-function extractFullRecipeData(recipes_info){
+
+function extractFullRecipeData(recipes_info) {
     return recipes_info.map((recipe_info) => {
 
-        const{
+        const {
             id,
             title,
             readyInMinutes,
@@ -204,6 +230,20 @@ function extractFullRecipeData(recipes_info){
             extendedIngredients: extendedIngredients,
         };
     });
+}
+
+function validRecipes(random_recipes) {
+    let valid_recipes = [];
+    random_recipes.data.recipes.forEach(recipe => {
+        if (recipe.instructions && recipe.instructions.length > 0) {
+            valid_recipes.push(recipe);
+            if (valid_recipes.length == 3) {
+                random_recipes.data.recipes = valid_recipes;
+                return random_recipes;
+            }
+        }
+    });
+    return random_recipes;
 }
 
 

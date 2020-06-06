@@ -8,7 +8,7 @@ router.use((req, res, next) => {
     next();
   }
   else {
-    throw { status: 401, message: "unauthorized2" }
+    throw { status: 401, message: "unauthorized" }
   }
 });
 

@@ -1,7 +1,6 @@
 var express = require("express");
 var router = express.Router();
 const DButils = require("./utils/DButils");
-const bcrypt = require("bcrypt");
 
 router.use((req, res, next) => {
   if (req.user_id) {

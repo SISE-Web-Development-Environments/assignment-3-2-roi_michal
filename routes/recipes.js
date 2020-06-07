@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 const search_util = require("./utils/SEARCHutils");
+const DButils = require("./utils/DButils");
 const axios = require("axios");
 const api_domain = "https://api.spoonacular.com/recipes";
 
@@ -37,6 +38,16 @@ router.get("/getRecipeByID", async (req, res, next) => {
         next(error);
     }
 });
+
+// router.get("/getRecipeByIDFromDataBase", async (req, res, next) => {
+//     try {
+
+// const recipe = await DButils.getRecipeInfo(req.query.recipe_id);
+//         res.send({ data: recipe.data });
+//     } catch (error) {
+//         next(error);
+//     }
+// });
 
 router.get("/displayFullInformation", async (req, res, next) => {
     try {

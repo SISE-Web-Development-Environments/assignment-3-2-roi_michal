@@ -173,6 +173,11 @@ extractFullRecipeData = function (recipes_info) {
         };
     });
 };
+
+selectRecipeByID = async function(recipe_id){
+    const recipe = await execQuery(`SELECT * FROM recipes WHERE recipe_id = '${recipe_id}'`);
+    return recipe;
+};
 // ************* EXPORTS ************* //
 
 module.exports ={
@@ -186,6 +191,7 @@ module.exports ={
     getRecipesRelevantInfo: getRecipesRelevantInfo,
     getRecipesFullInfo: getRecipesFullInfo,
     extractRelevantRecipeData: extractRelevantRecipeData,
-    extractFullRecipeData: extractFullRecipeData
+    extractFullRecipeData: extractFullRecipeData,
+    selectRecipeByID: selectRecipeByID
     
 }

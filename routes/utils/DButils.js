@@ -175,7 +175,7 @@ extractFullRecipeData = function (recipes_info) {
 };
 
 selectRecipeByID = async function(recipe_id){
-    const recipe = await execQuery(`SELECT * FROM recipes WHERE recipe_id = '${recipe_id}'`);
+    const recipe = await execQuery("select * from recipes where recipe_id like '"+recipe_id+"'");
     return recipe;
 };
 // ************* EXPORTS ************* //
@@ -192,6 +192,7 @@ module.exports ={
     getRecipesFullInfo: getRecipesFullInfo,
     extractRelevantRecipeData: extractRelevantRecipeData,
     extractFullRecipeData: extractFullRecipeData,
-    selectRecipeByID: selectRecipeByID
+    selectRecipeByID: selectRecipeByID,
+    getPersonalRecipes: getPersonalRecipes
     
 }

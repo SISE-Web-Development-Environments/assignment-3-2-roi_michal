@@ -3,6 +3,6 @@ INSERT INTO dbo.personal_recipes
     [user_id], [recipe_id]
 )
 VALUES(
-    '6d5074c6-b578-4a3e-9a79-f6037517811c', '501d7ca2-adb3-4364-9385-21ac51dc7764'
+    '76660db7-43cd-4949-ab08-188983e2bbd4', 'a97bddf9-3563-4fab-9584-74e6b3637256'
 )
 GO

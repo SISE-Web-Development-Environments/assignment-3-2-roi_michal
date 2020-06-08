@@ -7,5 +7,9 @@ CREATE TABLE [dbo].[recipes](
 	[vegan] [int] NOT NULL,
 	[vegeterian] [int] NOT NULL,
 	[gluten_free] [int] NOT NULL,
-	[servings] [int] NOT NULL
+	[servings] [int] NOT NULL,
+	[aggregateLikes] [int] NOT NULL,
+	[instructions] [varchar] (500) NOT NULL
 )
+
+        

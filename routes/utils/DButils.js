@@ -80,6 +80,99 @@ getFavoriteRecipes = async function (user_id) {
     return recipes_ids;
 };
 
+getPersonalRecipes = async function (user_id) {
+    const recipes_ids = await execQuery(
+        `SELECT recipe_id FROM personal_recipes WHERE user_id = '${user_id}'`        
+    );
+    return recipes_ids;
+};
+
+//get from API
+getRecipesRelevantInfo = async function (recipes_id_list) {
+    let promises = [];
+    //for each id -> get promise of GET response
+    recipes_id_list.map((id) =>
+        promises.push(axios.get(`${api_domain}/${id}/information`, {
+            params: {
+                includeNutrition: false,
+                apiKey: process.env.spooncular_apiKey
+            }
+        }))
+    );
+    let info_response1 = await Promise.all(promises);
+    relevantRecipesData = extractRelevantRecipeData(info_response1);
+    return relevantRecipesData;
+};
+
+getRecipesFullInfo = async function (recipes_id_list) {
+    let promises = [];
+    //for each id -> get promise of GET response
+    recipes_id_list.map((id) =>
+        promises.push(axios.get(`${api_domain}/${id}/information`, {
+            params: {
+                includeNutrition: false,
+                apiKey: process.env.spooncular_apiKey
+            }
+        }))
+    );
+    let info_response1 = await Promise.all(promises);
+    relevantRecipesData = extractFullRecipeData(info_response1);
+    return relevantRecipesData;
+};
+
+extractRelevantRecipeData = function (recipes_info) {
+    return recipes_info.map((recipe_info) => {
+        const {
+            id,
+            title,
+            readyInMinutes,
+            aggregateLikes,
+            vegan,
+            glutenFree,
+            image,
+        } = recipe_info.data;
+        return {
+            id: id,
+            title: title,
+            readyInMinutes: readyInMinutes,
+            aggregateLikes: aggregateLikes,
+            vegan: vegan,
+            glutenFree: glutenFree,
+            image: image,
+
+        };
+    });
+};
+
+extractFullRecipeData = function (recipes_info) {
+    return recipes_info.map((recipe_info) => {
+
+        const {
+            id,
+            title,
+            readyInMinutes,
+            aggregateLikes,
+            vegan,
+            glutenFree,
+            image,
+            instructions,
+            servings,
+            extendedIngredients,
+        } = recipe_info.data;
+        return {
+            id: id,
+            title: title,
+            readyInMinutes: readyInMinutes,
+            aggregateLikes: aggregateLikes,
+            vegan: vegan,
+            glutenFree: glutenFree,
+            image: image,
+            instructions: instructions,
+            servings: servings,
+            extendedIngredients: extendedIngredients,
+        };
+    });
+};
 // ************* EXPORTS ************* //
 
 module.exports ={
@@ -89,5 +182,10 @@ module.exports ={
     selectUserWithUsername: selectUserWithUsername,
     insertUserToUser: insertUserToUser,
     addFavoriteRecipe: addFavoriteRecipe,
-    getFavoriteRecipes: getFavoriteRecipes
+    getFavoriteRecipes: getFavoriteRecipes,
+    getRecipesRelevantInfo: getRecipesRelevantInfo,
+    getRecipesFullInfo: getRecipesFullInfo,
+    extractRelevantRecipeData: extractRelevantRecipeData,
+    extractFullRecipeData: extractFullRecipeData
+    
 }

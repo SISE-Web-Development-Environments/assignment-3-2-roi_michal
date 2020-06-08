@@ -30,4 +30,33 @@ router.get("/getFavoriteRecipes", async (req, res, next) => {
   }
 });
 
+//get my personal recepies
+router.get("/getPersonalRecipes", async (req, res, next) => {
+  try {
+    const recipes_id_list = await DButils.getPersonalRecipes(req.user_id);
+    try {
+      const recipes = await getPersonalRecipesInfo(recipes_id_list);
+      res.send({ data: recipes });
+  } catch (error) {
+      next(error);
+  }
+  
+});
+
+
+async function getPersonalRecipesInfo(recipes_id_list) {
+  let promises = [];
+  //for each id -> get promise of GET response
+  recipes_id_list.map((id) =>
+      promises.push(axios.get(`${api_domain}/${id}/information`, {
+          params: {
+              includeNutrition: false,
+              apiKey: process.env.spooncular_apiKey
+          }
+      }))
+  );
+  let info_response1 = await Promise.all(promises);
+  relevantRecipesData = extractRelevantRecipeData(info_response1);
+  return relevantRecipesData;
+}
 module.exports = router;

@@ -1,5 +1,5 @@
-CREATE TABLE [dbo].[personal_recipes](
-	[user_id][UNIQUEIDENTIFIER]   NOT NULL,
-	[recipe_id][UNIQUEIDENTIFIER]  NOT NULL 	
+CREATE TABLE [dbo].[favorite_recipes](
+	[user_id][varchar] (300)  NOT NULL,
+	[recipe_id][varchar] (300) NOT NULL 	
 )
 

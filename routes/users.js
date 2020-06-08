@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 const DButils = require("./utils/DButils");
+const search_util = require("./utils/SearchUtils");
 
 router.use((req, res, next) => {
   if (req.user_id) {
@@ -13,8 +14,9 @@ router.use((req, res, next) => {
 
 router.post("/addFavoriteRecipe", async (req, res, next) => {
   try {
-    await DButils.addFavoriteRecipe(req.user_id, '1234'); //todo: change hard code      
-    res.send({ sucess: true, message: "recipe added" });
+    const {recipe_id} = req.query;
+    await DButils.addFavoriteRecipe(req.user_id, recipe_id);      
+    res.send({ sucess: true, message: "favorite recipe added" });
   } catch (error) {
     next(error);
   }
@@ -23,8 +25,9 @@ router.post("/addFavoriteRecipe", async (req, res, next) => {
 //get my favorite recepies
 router.get("/getFavoriteRecipes", async (req, res, next) => {
   try {
-    const recipes_ids = await DButils.getFavoriteRecipes(req.user_id);
-    res.send(recipes_ids);
+    const recipes_id_list = await DButils.getFavoriteRecipes(req.user_id);
+    const recipes = await search_util.getRecipesRelevantInfo(recipes_id_list);
+    res.send({ data: recipes });
   } catch (error) {
     next(error);
   }

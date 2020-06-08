@@ -67,9 +67,10 @@ insertUserToUser = async function(username, hash_password, first_name, last_name
 
 addFavoriteRecipe = async function (user_id, reccipe_id) {
     await execQuery(
-        `INSERT INTO favorite_recipes VALUES (          
-          '${user_id}',
-          '${reccipe_id}')`          
+        `INSERT INTO favorite_recipes VALUES (                     
+            '${user_id}',
+            '${reccipe_id}'        
+          )`          
     );
 };
 

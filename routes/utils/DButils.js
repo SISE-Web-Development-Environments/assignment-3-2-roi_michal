@@ -87,6 +87,13 @@ getPersonalRecipes = async function (user_id) {
     return recipes_ids;
 };
 
+getFamilyRecipesIds = async function (user_id) {
+    const recipes_ids = await execQuery(
+        `SELECT recipe_id FROM family_recipes WHERE user_id = '${user_id}'`        
+    );
+    return recipes_ids;
+};
+
 //get from API
 getRecipesRelevantInfo = async function (recipes_id_list) {
     let promises = [];
@@ -178,6 +185,11 @@ selectRecipeByID = async function(recipe_id){
     const recipe = await execQuery("select * from recipes where recipe_id like '"+recipe_id+"'");
     return recipe;
 };
+
+selectFamilyRecipeByID = async function(recipe_id){
+    const recipe = await execQuery("select * from family_recipes where recipe_id like '"+recipe_id+"'");
+    return recipe;
+};
 // ************* EXPORTS ************* //
 
 module.exports ={
@@ -193,6 +205,8 @@ module.exports ={
     extractRelevantRecipeData: extractRelevantRecipeData,
     extractFullRecipeData: extractFullRecipeData,
     selectRecipeByID: selectRecipeByID,
-    getPersonalRecipes: getPersonalRecipes
+    getPersonalRecipes: getPersonalRecipes,
+    getFamilyRecipesIds: getFamilyRecipesIds,
+    selectFamilyRecipeByID: selectFamilyRecipeByID
     
 }

@@ -4,19 +4,23 @@ const api_key = process.env.spooncular_apiKey;
 const api_domain = "https://api.spoonacular.com/recipes";
 
 async function getRecipesRelevantInfo(recipes_id_list) {
-    let promises = [];
-    //for each id -> get promise of GET response
-    recipes_id_list.map((id) =>
-        promises.push(axios.get(`${api_domain}/${id}/information`, {
-            params: {
-                includeNutrition: false,
-                apiKey: process.env.spooncular_apiKey
-            }
-        }))
+    let promises = await Promise.all(
+        recipes_id_list.map((recipes) =>
+            getRecipeInfo(recipes.recipe_id)
+        )
     );
-    let info_response1 = await Promise.all(promises);
-    relevantRecipesData = extractRelevantRecipeData(info_response1);
+    let info_response = await Promise.all(promises);
+    relevantRecipesData = extractRelevantRecipeData(info_response);
     return relevantRecipesData;
+}
+
+async function getRecipeInfo(id) {
+    return await axios.get(`${api_domain}/${id}/information`, {
+        params: {           
+            includeNutrition: false,
+            apiKey: api_key
+        }
+    });
 }
 
 function extractRelevantRecipeData(recipes_info) {

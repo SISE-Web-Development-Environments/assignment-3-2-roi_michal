@@ -33,6 +33,28 @@ router.get("/getFavoriteRecipes", async (req, res, next) => {
   }
 });
 
+
+router.post("/addSeenRecipe", async (req, res, next) => {
+  try {
+    const {recipe_id} = req.query;
+    await DButils.addSeenRecipe(req.user_id, recipe_id);      
+    res.send({ sucess: true, message: "seen recipe added" });
+  } catch (error) {
+    next(error);
+  }
+});
+
+//get my favorite recepies
+router.get("/getLastThreeSeenRecipes", async (req, res, next) => {
+  try {
+    const recipes_id_list = await DButils.getSeenRecipes(req.user_id);
+    const recipes = await search_util.getRecipesRelevantInfo(recipes_id_list);
+    res.send({ data: recipes });
+  } catch (error) {
+    next(error);
+  }
+});
+
 //get my personal recepies
 router.get("/getPersonalRecipes", async (req, res, next) => {
   try {
@@ -45,6 +67,8 @@ router.get("/getPersonalRecipes", async (req, res, next) => {
   }
   
 });
+
+
 
 
 async function getPersonalRecipesInfo(recipes_id_list) {

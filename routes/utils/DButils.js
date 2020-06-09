@@ -24,7 +24,7 @@ execQuery = async function (query) {
     try {
         var result = await pool.request().query(query);
         return result.recordset;
-    } catch (err) {        
+    } catch (err) {
         throw err;
     }
 };
@@ -37,22 +37,22 @@ execQuery = async function (query) {
 
 // ************* QUERIES ************* //
 
-selectUsernames = async function(){
+selectUsernames = async function () {
     const users = await execQuery("SELECT username FROM users");
     return users;
 };
 
-selectUserWithUsername = async function(username){
+selectUserWithUsername = async function (username) {
     const user = await execQuery(`SELECT * FROM users WHERE username = '${username}'`);
     return user;
 };
 
-selectUsersIDs = async function(){
+selectUsersIDs = async function () {
     const usersIDs = await execQuery("SELECT user_id FROM users");
     return usersIDs;
 };
 
-insertUserToUser = async function(username, hash_password, first_name, last_name, country, email){
+insertUserToUser = async function (username, hash_password, first_name, last_name, country, email) {
     await execQuery(
         `INSERT INTO users VALUES (
               default,
@@ -62,7 +62,7 @@ insertUserToUser = async function(username, hash_password, first_name, last_name
             '${last_name}',
             '${country}',
             '${email}')`
-      );    
+    );
 };
 
 addFavoriteRecipe = async function (user_id, reccipe_id) {
@@ -70,20 +70,43 @@ addFavoriteRecipe = async function (user_id, reccipe_id) {
         `INSERT INTO favorite_recipes VALUES (                     
             '${user_id}',
             '${reccipe_id}'        
-          )`          
+          )`
     );
 };
 
 getFavoriteRecipes = async function (user_id) {
     const recipes_ids = await execQuery(
-        `SELECT recipe_id FROM favorite_recipes WHERE user_id = '${user_id}'`        
+        `SELECT recipe_id FROM favorite_recipes WHERE user_id = '${user_id}'`
+    );
+    return recipes_ids;
+};
+
+addSeenRecipe = async function (user_id, reccipe_id) {
+    let current_datetime = convertDateToSqlDatetime();
+    await execQuery(
+        `INSERT INTO seen_recipes VALUES (                     
+            '${user_id}',
+            '${reccipe_id}',
+            '${current_datetime}'      
+          )`
+
+    );
+};
+
+convertDateToSqlDatetime = function () {
+    return new Date().toISOString().slice(0, 19).replace('T', ' ');
+}
+
+getSeenRecipes = async function (user_id) {
+    const recipes_ids = await execQuery(
+        `SELECT top (3) recipe_id FROM seen_recipes WHERE user_id = '${user_id}' order by time_of_wacth desc `
     );
     return recipes_ids;
 };
 
 getPersonalRecipes = async function (user_id) {
     const recipes_ids = await execQuery(
-        `SELECT recipe_id FROM personal_recipes WHERE user_id = '${user_id}'`        
+        `SELECT recipe_id FROM personal_recipes WHERE user_id = '${user_id}'`
     );
     return recipes_ids;
 };
@@ -175,13 +198,13 @@ extractFullRecipeData = function (recipes_info) {
     });
 };
 
-selectRecipeByID = async function(recipe_id){
+selectRecipeByID = async function (recipe_id) {
     const recipe = await execQuery(`SELECT * FROM recipes WHERE recipe_id = '${recipe_id}'`);
     return recipe;
 };
 // ************* EXPORTS ************* //
 
-module.exports ={
+module.exports = {
     execQuery: execQuery,
     selectUsernames: selectUsernames,
     selectUsersIDs: selectUsersIDs,
@@ -193,6 +216,9 @@ module.exports ={
     getRecipesFullInfo: getRecipesFullInfo,
     extractRelevantRecipeData: extractRelevantRecipeData,
     extractFullRecipeData: extractFullRecipeData,
-    selectRecipeByID: selectRecipeByID
-    
+    selectRecipeByID: selectRecipeByID,
+    addSeenRecipe: addSeenRecipe,
+    getSeenRecipes: getSeenRecipes
+
+
 }

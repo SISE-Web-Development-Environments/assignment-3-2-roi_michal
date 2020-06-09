@@ -1,6 +1,52 @@
-const recipe_api_url = "https://api.spoonacular.com/recipes";
+
 const axios = require("axios");
-const api_key = "909c9716727d4a91b1e89519e823733b";
+const api_key = process.env.spooncular_apiKey;
+const api_domain = "https://api.spoonacular.com/recipes";
+
+async function getRecipesRelevantInfo(recipes_id_list) {
+    let promises = await Promise.all(
+        recipes_id_list.map((recipes) =>
+            getRecipeInfo(recipes.recipe_id)
+        )
+    );
+    let info_response = await Promise.all(promises);
+    relevantRecipesData = extractRelevantRecipeData(info_response);
+    return relevantRecipesData;
+}
+
+async function getRecipeInfo(id) {
+    return await axios.get(`${api_domain}/${id}/information`, {
+        params: {           
+            includeNutrition: false,
+            apiKey: api_key
+        }
+    });
+}
+
+function extractRelevantRecipeData(recipes_info) {
+    return recipes_info.map((recipe_info) => {
+        const {
+            id,
+            title,
+            readyInMinutes,
+            aggregateLikes,
+            vegan,
+            glutenFree,
+            image,
+        } = recipe_info.data;
+        return {
+            id: id,
+            title: title,
+            readyInMinutes: readyInMinutes,
+            aggregateLikes: aggregateLikes,
+            vegan: vegan,
+            glutenFree: glutenFree,
+            image: image,
+
+        };
+    });
+}
+
 
 function extractQueriesParams(query_params, search_params){
     const params_list = ["diet", "cuisine", "intolerance"];
@@ -79,3 +125,5 @@ exports.extrasSearchResultIds = extrasSearchResultIds;
 exports.extractQueriesParams = extractQueriesParams;
 exports.extractRelevantRecipeData = extractRelevantRecipeData;
 exports.getRecipesInfo = getRecipesInfo;
+exports.getRecipesRelevantInfo = getRecipesRelevantInfo;
+exports.extractRelevantRecipeData = extractRelevantRecipeData;

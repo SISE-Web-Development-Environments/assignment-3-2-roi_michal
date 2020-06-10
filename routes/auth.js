@@ -35,7 +35,7 @@ router.post("/Login", async (req, res, next) => {
     const user = (await DButils.selectUserWithUsername(req.body.username))[0];
 
     if (!bcrypt.compareSync(req.body.password, user.password)) {
-      throw { status: 401, message: "Username or Password incorrect" };
+      throw { status: 400, message: "Username or Password incorrect" };
     }
 
     // Set cookie

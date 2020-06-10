@@ -128,6 +128,19 @@ router.get("/getThreeRandomRecipes", async (req, res, next) => {
     }
 });
 
+function validRecipes(random_recipes) {
+    let valid_recipes = [];
+    random_recipes.data.recipes.forEach(recipe => {
+        if (recipe.instructions && recipe.instructions.length > 0) {
+            if (valid_recipes.length < 3) {
+                valid_recipes.push(recipe);
+            }
+        }
+    });
+    random_recipes.data.recipes = valid_recipes;
+    return random_recipes;
+}
+
 function getRecipeInfo(id) {
     return axios.get(`${api_domain}/${id}/information`, {
         params: {
@@ -223,19 +236,7 @@ function extractFullRecipeData(recipes_info) {
     });
 }
 
-function validRecipes(random_recipes) {
-    let valid_recipes = [];
-    random_recipes.data.recipes.forEach(recipe => {
-        if (recipe.instructions && recipe.instructions.length > 0) {
-            valid_recipes.push(recipe);
-            if (valid_recipes.length == 3) {
-                random_recipes.data.recipes = valid_recipes;
-                return random_recipes;
-            }
-        }
-    });
-    return random_recipes;
-}
+
 
 
 module.exports = router;

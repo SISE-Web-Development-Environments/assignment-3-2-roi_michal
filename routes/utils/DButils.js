@@ -29,12 +29,6 @@ execQuery = async function (query) {
     }
 };
 
-// process.on("SIGINT", function () {
-//     if (pool) {
-//         pool.close(() => console.log("connection pool closed"));
-//     }
-// });
-
 // ************* QUERIES ************* //
 
 selectUsernames = async function () {
@@ -99,7 +93,7 @@ convertDateToSqlDatetime = function () {
 
 getSeenRecipes = async function (user_id) {
     const recipes_ids = await execQuery(
-        `SELECT top (3) recipe_id FROM seen_recipes WHERE user_id = '${user_id}' order by time_of_wacth desc `
+        `SELECT top (3) recipe_id FROM seen_recipes WHERE user_id = '${user_id}' order by time_of_watch desc `
     );
     return recipes_ids;
 };

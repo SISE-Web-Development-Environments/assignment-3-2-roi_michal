@@ -59,8 +59,7 @@ router.get("/getLastThreeSeenRecipes", async (req, res, next) => {
 //get my personal recepies
 router.get("/getPersonalRecipes", async (req, res, next) => {
   try {
-    const recipes_id_list = await DButils.getPersonalRecipes(req.user_id);
-   // const recipes_id_list = await DButils.getPersonalRecipes(req.query.recipe_id);
+    const recipes_id_list = await DButils.getPersonalRecipes(req.user_id);   
     const recipes = await getRecipesInfo(recipes_id_list);
     res.send({ data: recipes });
   } catch (error) {

@@ -1,7 +1,7 @@
 const express = require("express");
 var router = express.Router();
 const DButils = require('./utils/DButils');
-const search_util = require('./utils/searchUtils');
+const search_util = require('./utils/serchings');
 
 
 router.use((req, res, next) => {

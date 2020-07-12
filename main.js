@@ -8,11 +8,12 @@ const bodyParser = require("body-parser");
 const session = require("client-sessions");
 const DButils = require("./routes/utils/DButils");
 
+
 //---App settings and config
 const app = express();
 const port = process.env.PORT || "4000";
 const corsConfig = {
-    origin: true,
+    origin: 'http://localhost:8080/ ',
     credentials: true
   };
 

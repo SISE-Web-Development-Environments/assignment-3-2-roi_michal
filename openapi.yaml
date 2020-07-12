@@ -1,0 +1,554 @@
+openapi: 3.0.0
+info:
+  title: Swagger recipes
+  description: Our recipes's API
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/roikatz16/recepies_API/1.0.0
+  description: SwaggerHub API Auto Mocking
+- url: https://localhost:4000
+tags:
+- name: auth
+  description: Register, login & logout
+- name: recipe
+  description: Searching recipes
+- name: user
+  description: Getting your on recipes
+paths:
+  /auth/Register:
+    post:
+      tags:
+      - auth
+      description: A JSON Object contains username, password, and another details.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/body'
+        required: true
+      responses:
+        "201":
+          description: |
+            user created succssesfully
+        "409":
+          description: |
+            Username taken
+  /auth/Login:
+    post:
+      tags:
+      - auth
+      description: A JSON Object contains username, password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/body_1'
+        required: true
+      responses:
+        "200":
+          description: |
+            Login succeeded The session ID is returned in a cookie named 'session' You need to include this cookie in subsequent request
+          headers:
+            Set-Cookie:
+              style: simple
+              explode: false
+              schema:
+                type: string
+                example: session=e8sd828hnskzx12w
+        "400":
+          description: Username or Password incorrect
+        "401":
+          description: No Username in the system
+  /auth/Logout:
+    post:
+      tags:
+      - auth
+      responses:
+        default:
+          description: logout succeeded
+  /recipe/addRecipe:
+    post:
+      tags:
+      - recipe
+      summary: Add a new recipe
+      operationId: addRecipe
+      requestBody:
+        $ref: '#/components/requestBodies/Recipe'
+      responses:
+        "405":
+          description: Invalid input
+  /recipe/searchByTags:
+    get:
+      tags:
+      - recipe
+      summary: Finds recipe by tags
+      description: Muliple tags can be provided with comma separated strings. Use\
+        \ tag1, tag2, tag3 for testing.
+      operationId: findRecipeByTags
+      parameters:
+      - name: name
+        in: query
+        description: Name of recipe
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: cuisine
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: diet
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: intolerances
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: number
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Recipe'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Recipe'
+        "400":
+          description: Invalid tag value
+  /recipe/searchByName:
+    get:
+      tags:
+      - recipe
+      summary: Finds recipe by name
+      description: Muliple tags can be provided with comma separated strings. Use\
+        \ tag1, tag2, tag3 for testing.
+      operationId: findRecipeByName
+      parameters:
+      - name: name
+        in: query
+        description: Name of recipe
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Recipe'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Recipe'
+        "400":
+          description: Invalid tag value
+  /recipe/getRecipeByID:
+    get:
+      tags:
+      - recipe
+      summary: Find recipe by ID
+      description: Returns a single recipe
+      operationId: getRecipeById
+      parameters:
+      - name: recipeId
+        in: path
+        description: ID of recipe to return
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      - name: number
+        in: path
+        description: number of recipes to return
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Recipe'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Recipe'
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: Recipe not found
+  /recipe/displayRelevantInformation:
+    get:
+      tags:
+      - recipe
+      summary: display relevant recipe data
+      operationId: displayRelevantRecipe
+      parameters:
+      - name: recipeId
+        in: path
+        description: ID of recipe to dislply
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "405":
+          description: Invalid input
+  /recipe/displayFullInformation:
+    get:
+      tags:
+      - recipe
+      summary: display full recipe data
+      operationId: displayFullRecipe
+      parameters:
+      - name: recipeId
+        in: path
+        description: ID of recipe to dislply
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "405":
+          description: Invalid input
+  /recipe/getThreeRandomRecipes:
+    get:
+      tags:
+      - recipe
+      summary: display three randoms recipes data
+      operationId: display three randoms recipes
+      responses:
+        "405":
+          description: Invalid input
+  /user/addFavoriteRecipe:
+    post:
+      tags:
+      - user
+      description: Save recipe id in user's faovrites
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/body_2'
+        required: true
+      responses:
+        "200":
+          description: favorite recipe added
+      security:
+      - cookieAuth: []
+  /user/getPersonalRecipes:
+    get:
+      tags:
+      - user
+      summary: get ersonal recipes
+      operationId: getPersonalRecipes
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: string
+            application/xml:
+              schema:
+                type: string
+        "400":
+          description: No personal recipes for this user
+  /user/getFamilyRecipes:
+    get:
+      tags:
+      - user
+      summary: get family recipes
+      operationId: getFamilyRecipes
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: string
+            application/xml:
+              schema:
+                type: string
+        "400":
+          description: No family recipes for this user
+  /user/getFavoriteRecipes:
+    get:
+      tags:
+      - user
+      description: Get the user's favorite recipes
+      responses:
+        "200":
+          description: Objects with the recipes
+          content:
+            application/jason:
+              schema:
+                $ref: '#/components/schemas/Recipe'
+      security:
+      - cookieAuth: []
+  /user/addSeenRecipe:
+    post:
+      tags:
+      - user
+      description: Save recipe id in user's seens
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/body_3'
+        required: true
+      responses:
+        "200":
+          description: seen recipe added
+      security:
+      - cookieAuth: []
+  /user/getLastThreeSeenRecipes:
+    get:
+      tags:
+      - user
+      description: Get the user's three last recipes
+      responses:
+        "200":
+          description: Objects with three recipes
+          content:
+            application/jason:
+              schema:
+                $ref: '#/components/schemas/Recipe'
+      security:
+      - cookieAuth: []
+components:
+  schemas:
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+      xml:
+        name: Category
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        username:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        country:
+          type: string
+        photoUrls:
+          type: array
+          xml:
+            name: photoUrl
+            wrapped: true
+          items:
+            type: string
+      xml:
+        name: User
+    Tag:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+      xml:
+        name: Tag
+    Recipe:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        instractions:
+          type: string
+        course:
+          type: integer
+          format: int64
+        popularity:
+          type: number
+        ingradiants:
+          type: string
+        cookingDuration:
+          type: number
+        category:
+          $ref: '#/components/schemas/Category'
+        photoUrls:
+          type: array
+          xml:
+            name: photoUrl
+            wrapped: true
+          items:
+            type: string
+        tags:
+          type: array
+          xml:
+            name: tag
+            wrapped: true
+          items:
+            $ref: '#/components/schemas/Tag'
+    DisplayRecipe:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+          example: doggie
+        recipe:
+          $ref: '#/components/schemas/Recipe'
+        vegiterian:
+          type: integer
+          format: int64
+        gluten:
+          type: boolean
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
+    body:
+      type: object
+      properties:
+        username:
+          maxLength: 8
+          minLength: 3
+          type: string
+          description: Contains only letters
+        password:
+          maxLength: 10
+          minLength: 5
+          type: string
+          description: Contains letters with at least 1 numerical character and 1
+            scecial character
+        first_name:
+          type: string
+        last_name:
+          type: string
+        country:
+          type: string
+        email:
+          type: string
+      example:
+        username: roi
+        password: 1234%p
+        first_name: roi
+        last_name: levi
+        country: Japan
+        email: roi@gmail.com
+    body_1:
+      type: object
+      properties:
+        username:
+          maxLength: 8
+          minLength: 3
+          type: string
+          description: Contains only letters
+        password:
+          maxLength: 10
+          minLength: 5
+          type: string
+          description: Contains letters with at least 1 numerical character and 1
+            scecial character
+    body_2:
+      type: object
+      properties:
+        recipe_id:
+          type: string
+    body_3:
+      type: object
+      properties:
+        recipe_id:
+          type: string
+  requestBodies:
+    Recipe:
+      description: Recipe object that needs to be added to the stock
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Recipe'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/Recipe'
+      required: true
+    DisplayRecipe:
+      description: Recipe object that needs to be added to the stock
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DisplayRecipe'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/DisplayRecipe'
+      required: true
+    UserArray:
+      description: List of user object
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/User'
+      required: true
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      name: session
+      in: cookie

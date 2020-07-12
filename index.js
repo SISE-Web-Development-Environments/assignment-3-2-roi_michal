@@ -12,7 +12,8 @@ const DButils = require("./routes/utils/DButils");
 const app = express();
 const port = process.env.PORT || "4000";
 
-
+app.use(cors());
+app.options("*", cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 //print request logs

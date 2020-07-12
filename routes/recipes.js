@@ -1,6 +1,6 @@
 var express = require("express");
 var router = express.Router();
-const search_util = require("./utils/SearchUtils");
+const search_util = require("./utils/SEARCHUtils");
 const axios = require("axios");
 const api_domain = "https://api.spoonacular.com/recipes";
 

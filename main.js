@@ -13,7 +13,7 @@ const DButils = require("./routes/utils/DButils");
 const app = express();
 const port = process.env.PORT || "4000";
 const corsConfig = {
-    origin: 'http://localhost:8080/ ',
+    origin: true,
     credentials: true
   };
 

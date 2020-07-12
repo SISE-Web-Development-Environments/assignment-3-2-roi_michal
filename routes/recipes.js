@@ -122,7 +122,7 @@ router.get("/getThreeRandomRecipes", async (req, res, next) => {
         );
         //  recipes = recipes.map((recipe) => recipe.data);
         recipes = extractRelevantRecipeData(recipes);
-        res.send({ data: recipes });
+        res.send({ data:recipes});
     } catch (error) {
         next(error);
     }
@@ -200,8 +200,7 @@ function extractRelevantRecipeData(recipes_info) {
             aggregateLikes: aggregateLikes,
             vegan: vegan,
             glutenFree: glutenFree,
-            image: image,
-
+            image: image
         };
     });
 }

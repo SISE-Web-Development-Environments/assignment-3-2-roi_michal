@@ -7,13 +7,17 @@ const bodyParser = require("body-parser");
 const session = require("client-sessions");
 const DButils = require("./routes/utils/DButils");
 
-
 //---App settings and config
 const app = express();
 const port = process.env.PORT || "4000";
+const corsConfig = {
+    origin: true,
+    credentials: true
+  };
 
-app.use(cors());
-app.options("*", cors());
+app.use(cors(corsConfig));
+app.options("*", cors(corsConfig));
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 //print request logs

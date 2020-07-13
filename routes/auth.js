@@ -15,7 +15,7 @@ router.post("/Register", async (req, res, next) => {
     }
     // make new password
     let hash_password = bcrypt.hashSync(req.body.password, parseInt(process.env.bcrypt_saltRounds));
-    await DButils.insertUserToUser(req.body.username, hash_password, req.body.first_name, req.body.last_name, req.body.country, req.body.email);
+    await DButils.insertUserToUser(req.body.username, hash_password, req.body.firstName, req.body.lastName, req.body.country, req.body.email);
 
     res.status(201).send({ message: "user created", success: true });
   } catch (error) {

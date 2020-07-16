@@ -14,9 +14,8 @@ router.use((req, res, next) => {
 });
 
 router.post("/addFavoriteRecipe", async (req, res, next) => {
-  try {
-    const {recipe_id} = req.query;
-    await DButils.addFavoriteRecipe(req.user_id, recipe_id);      
+  try {    
+    await DButils.addFavoriteRecipe(req.user_id, req.body.recipe_id);      
     res.send({ sucess: true, message: "favorite recipe added" });
   } catch (error) {
     next(error);
@@ -34,11 +33,25 @@ router.get("/getFavoriteRecipes", async (req, res, next) => {
   }
 });
 
+router.get("/isFavorite", async (req, res, next) => {
+  try {   
+    let recipe = null;
+    let answer = false;
+    const {recipe_id} = req.query;
+    recipe = await DButils.isFavorite(req.user_id, recipe_id);
+    if(recipe.length!=0){
+      answer = true;
+    }
+    res.send({ answer });
+  } catch (error) {
+    next(error);
+  }
+});
+
 
 router.post("/addSeenRecipe", async (req, res, next) => {
-  try {
-    const {recipe_id} = req.query;
-    await DButils.addSeenRecipe(req.user_id, recipe_id);      
+  try {    
+    await DButils.addSeenRecipe(req.user_id,  req.body.recipe_id);      
     res.send({ sucess: true, message: "seen recipe added" });
   } catch (error) {
     next(error);
@@ -51,6 +64,21 @@ router.get("/getLastThreeSeenRecipes", async (req, res, next) => {
     const recipes_id_list = await DButils.getSeenRecipes(req.user_id);
     const recipes = await search_util.getRecipesRelevantInfo(recipes_id_list);
     res.send({ data: recipes });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/isSeen", async (req, res, next) => {
+  try {   
+    let recipe = null;
+    let answer = false;
+    const {recipe_id} = req.query;
+    recipe = await DButils.isSeen(req.user_id, recipe_id);
+    if(recipe.length!=0){
+      answer = true;
+    }
+    res.send({ answer });
   } catch (error) {
     next(error);
   }

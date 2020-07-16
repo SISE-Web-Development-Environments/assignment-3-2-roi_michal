@@ -59,11 +59,11 @@ insertUserToUser = async function (username, hash_password, first_name, last_nam
     );
 };
 
-addFavoriteRecipe = async function (user_id, reccipe_id) {
+addFavoriteRecipe = async function (user_id, recipe_id) {
     await execQuery(
         `INSERT INTO favorite_recipes VALUES (                     
             '${user_id}',
-            '${reccipe_id}'        
+            '${recipe_id}'        
           )`
     );
 };
@@ -75,12 +75,19 @@ getFavoriteRecipes = async function (user_id) {
     return recipes_ids;
 };
 
-addSeenRecipe = async function (user_id, reccipe_id) {
+isFavorite = async function (user_id, recipe_id) {
+    const answer = await execQuery(
+        `SELECT recipe_id FROM favorite_recipes WHERE user_id = '${user_id}' AND recipe_id = '${recipe_id}'`
+    );
+    return answer;
+};
+
+addSeenRecipe = async function (user_id, recipe_id) {
     let current_datetime = convertDateToSqlDatetime();
     await execQuery(
         `INSERT INTO seen_recipes VALUES (                     
             '${user_id}',
-            '${reccipe_id}',
+            '${recipe_id}',
             '${current_datetime}'      
           )`
 
@@ -96,6 +103,13 @@ getSeenRecipes = async function (user_id) {
         `SELECT top (3) recipe_id FROM seen_recipes WHERE user_id = '${user_id}' order by time_of_watch desc `
     );
     return recipes_ids;
+};
+
+isSeen = async function (user_id, recipe_id) {
+    const answer = await execQuery(
+        `SELECT recipe_id FROM seen_recipes WHERE user_id = '${user_id}' AND recipe_id = '${recipe_id}'`
+    );
+    return answer;
 };
 
 getPersonalRecipes = async function (user_id) {
@@ -218,6 +232,7 @@ module.exports = {
     insertUserToUser: insertUserToUser,
     addFavoriteRecipe: addFavoriteRecipe,
     getFavoriteRecipes: getFavoriteRecipes,
+    isFavorite: isFavorite,
     getRecipesRelevantInfo: getRecipesRelevantInfo,
     getRecipesFullInfo: getRecipesFullInfo,
     extractRelevantRecipeData: extractRelevantRecipeData,
@@ -227,7 +242,8 @@ module.exports = {
     getFamilyRecipesIds: getFamilyRecipesIds,
     selectFamilyRecipeByID: selectFamilyRecipeByID,
     addSeenRecipe: addSeenRecipe,
-    getSeenRecipes: getSeenRecipes
+    getSeenRecipes: getSeenRecipes,
+    isSeen: isSeen
 
 
 }

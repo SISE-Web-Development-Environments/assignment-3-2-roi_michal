@@ -108,14 +108,14 @@ function extractRelevantRecipeData(recipes_info) {
 
       } = recipe_info[0];
       return {
-        recipe_id: recipe_id,
-        recipe_name: recipe_name,
-        prep_time: prep_time,
+        id: recipe_id,
+        title: recipe_name,
+        readyInMinutes: prep_time,
         aggregateLikes: aggregateLikes,
         vegan: vegan,
         vegeterian: vegeterian,
-        gluten_free: gluten_free,
-        image_url: image_url,
+        glutenFree: gluten_free,
+        image: image_url,
 
       };
   });

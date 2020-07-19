@@ -94,9 +94,23 @@ addSeenRecipe = async function (user_id, recipe_id) {
     );
 };
 
+updateSeenRecipe = async function (user_id, recipe_id) {
+    let current_datetime = convertDateToSqlDatetime();
+    await execQuery(
+        `INSERT INTO seen_recipes VALUES (                     
+            '${user_id}',
+            '${recipe_id}',
+            '${current_datetime}'      
+          )`
+
+    );
+}
+
 convertDateToSqlDatetime = function () {
     return new Date().toISOString().slice(0, 19).replace('T', ' ');
 }
+
+
 
 getSeenRecipes = async function (user_id) {
     const recipes_ids = await execQuery(

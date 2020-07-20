@@ -190,6 +190,7 @@ function extractRelevantRecipeData(recipes_info) {
             readyInMinutes,
             aggregateLikes,
             vegan,
+            vegeterian,
             glutenFree,
             image,
         } = recipe_info.data;
@@ -200,7 +201,8 @@ function extractRelevantRecipeData(recipes_info) {
             aggregateLikes: aggregateLikes,
             vegan: vegan,
             glutenFree: glutenFree,
-            image: image
+            image: image,
+            vegeterian:vegeterian,
         };
     });
 }

@@ -31,6 +31,7 @@ function extractRelevantRecipeData(recipes_info) {
             readyInMinutes,
             aggregateLikes,
             vegan,
+            vegetarian,
             glutenFree,
             image,
         } = recipe_info.data;
@@ -40,6 +41,7 @@ function extractRelevantRecipeData(recipes_info) {
             readyInMinutes: readyInMinutes,
             aggregateLikes: aggregateLikes,
             vegan: vegan,
+            vegetarian: vegetarian,
             glutenFree: glutenFree,
             image: image,
 

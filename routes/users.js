@@ -81,6 +81,29 @@ router.get("/getFamilyRecipes", async (req, res, next) => {
   
 });
 
+router.get("/displayMyRecipeInformation", async (req, res, next) => {
+  try {
+    recipes_id_list = [];
+    recipes_id_list.push(req.query.recipe_id)
+    const recipes = await getMyRecipesInfo(recipes_id_list);
+    res.send({ data: recipes });
+  } catch (error) {
+      next(error);
+  }
+  
+});
+
+async function getMyRecipesInfo(recipes_id_list) {
+  let promises = [];
+  //for each id -> get promise of GET response
+  recipes_id_list.map((id) =>
+      promises.push(DButils.selectRecipeByID(id.recipe_id))
+  );
+  let info_response1 = await Promise.all(promises);
+  relevantRecipesData = await extractRelevantRecipeData(info_response1);
+  return relevantRecipesData;
+  // return promises
+}
 
 async function getRecipesInfo(recipes_id_list) {
   let promises = [];
@@ -104,7 +127,8 @@ function extractRelevantRecipeData(recipes_info) {
       	vegeterian,
       	gluten_free,
         aggregateLikes,
-        image_url
+        image_url,
+        instructions
 
       } = recipe_info[0];
       return {
@@ -116,6 +140,7 @@ function extractRelevantRecipeData(recipes_info) {
         vegeterian: vegeterian,
         glutenFree: gluten_free,
         image: image_url,
+        instructions: instructions,
 
       };
   });

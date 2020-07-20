@@ -97,12 +97,9 @@ addSeenRecipe = async function (user_id, recipe_id) {
 updateSeenRecipe = async function (user_id, recipe_id) {
     let current_datetime = convertDateToSqlDatetime();
     await execQuery(
-        `INSERT INTO seen_recipes VALUES (                     
-            '${user_id}',
-            '${recipe_id}',
-            '${current_datetime}'      
-          )`
-
+        `UPDATE seen_recipes 
+        SET time_of_watch = '${current_datetime}'
+        WHERE user_id = '${user_id}' AND recipe_id = '${recipe_id}'`
     );
 }
 
@@ -257,7 +254,6 @@ module.exports = {
     selectFamilyRecipeByID: selectFamilyRecipeByID,
     addSeenRecipe: addSeenRecipe,
     getSeenRecipes: getSeenRecipes,
-    isSeen: isSeen
-
-
+    isSeen: isSeen,
+    updateSeenRecipe: updateSeenRecipe
 }

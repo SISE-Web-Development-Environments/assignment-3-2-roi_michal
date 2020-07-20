@@ -58,6 +58,16 @@ router.post("/addSeenRecipe", async (req, res, next) => {
   }
 });
 
+//updateSeenRecipe
+router.post("/updateSeenRecipe", async (req, res, next) => {
+  try {    
+    await DButils.updateSeenRecipe(req.user_id,  req.body.recipe_id);      
+    res.send({ sucess: true, message: "seen recipe updated" });
+  } catch (error) {
+    next(error);
+  }
+});
+
 //get my favorite recepies
 router.get("/getLastThreeSeenRecipes", async (req, res, next) => {
   try {

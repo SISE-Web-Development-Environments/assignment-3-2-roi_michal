@@ -1,4 +1,4 @@
-# Assingment3.2_Roi_Michal
+# Recipe website - backend
 Recipe - backend side
 using Node.js
 
